@@ -4,7 +4,7 @@ import com.opencsv.exceptions.CsvException;
 
 import java.io.IOException;
 
-public interface ShowTestService {
+public interface StudyTestService {
 
-    void showTest() throws IOException, CsvException;
+    void execute() throws IOException, CsvException;
 }
