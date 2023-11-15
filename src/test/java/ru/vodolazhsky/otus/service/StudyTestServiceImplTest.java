@@ -14,16 +14,16 @@ import java.io.IOException;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-class ShowTestServiceImplTest {
+class StudyTestServiceImplTest {
 
     @Mock
     private StudyTestReader reader;
 
-    private ShowTestService service;
+    private StudyTestService service;
 
     @BeforeEach
     void setUp() {
-        service = new ShowTestServiceImpl(reader);
+        service = new StudyTestPrinter(reader);
     }
 
     @Test
@@ -32,7 +32,7 @@ class ShowTestServiceImplTest {
         Mockito.when(reader.parseTest()).thenReturn(new StudyTest(List.of()));
 
         // then
-        service.showTest();
+        service.execute();
         Mockito.verify(reader).parseTest();
     }
 }

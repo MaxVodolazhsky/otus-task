@@ -15,12 +15,11 @@ import java.util.List;
 
 public class StudyTestReaderCsv implements StudyTestReader {
 
-    private Resource questions;
+    private final Resource questions;
 
-    public void setQuestions(Resource questions) {
+    public StudyTestReaderCsv(Resource questions) {
         this.questions = questions;
     }
-
 
     public StudyTest parseTest() throws IOException, CsvException {
         CSVParser csvParser = new CSVParserBuilder()
@@ -33,7 +32,10 @@ public class StudyTestReaderCsv implements StudyTestReader {
                 .build()) {
 
             return new StudyTest(reader.readAll().stream()
-                    .map(part -> new Question(part[0], List.of(part[1].split(","))))
+                    .map(part -> new Question(
+                            part[0],
+                            List.of(part[1].split(",")),
+                            List.of(part[2].split(","))))
                     .toList());
         }
     }
