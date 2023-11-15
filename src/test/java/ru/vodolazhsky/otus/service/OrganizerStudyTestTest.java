@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import ru.vodolazhsky.otus.model.Question;
 import ru.vodolazhsky.otus.model.StudyTest;
 import ru.vodolazhsky.otus.reader.StudyTestReader;
@@ -24,6 +26,8 @@ class OrganizerStudyTestTest {
     @Mock
     private StudyTestReader reader;
 
+    @Mock
+    private MessageSource messageSource;
 
     private OrganizerStudyTest organizerStudyTest;
 
@@ -31,14 +35,15 @@ class OrganizerStudyTestTest {
     void setUp() {
         System.setOut(new PrintStream(outputStreamCaptor));
         prepareContext();
-        organizerStudyTest = new OrganizerStudyTest(reader, examBarrier);
+        organizerStudyTest = new OrganizerStudyTest(reader, examBarrier, messageSource);
     }
 
     @Test
     void execute_happyCase() throws Exception {
         //when
-        Mockito.when(reader.parseTest()).thenReturn(
+        Mockito.when(reader.parseTest(LocaleContextHolder.getLocale())).thenReturn(
                 new StudyTest(List.of(new Question("test", List.of("test"), List.of("test")))));
+        Mockito.when(messageSource.getMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Congratulations");
         //then
         organizerStudyTest.execute();
 
@@ -48,8 +53,9 @@ class OrganizerStudyTestTest {
     @Test
     void execute_badCase() throws Exception {
         //when
-        Mockito.when(reader.parseTest()).thenReturn(
+        Mockito.when(reader.parseTest(LocaleContextHolder.getLocale())).thenReturn(
                 new StudyTest(List.of(new Question("wrong", List.of("wrong"), List.of("wrong")))));
+        Mockito.when(messageSource.getMessage(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn("Sorry");
         //then
         organizerStudyTest.execute();
 

@@ -2,6 +2,8 @@ package ru.vodolazhsky.otus.service;
 
 import com.opencsv.exceptions.CsvException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.stereotype.Service;
 import ru.vodolazhsky.otus.model.Question;
 import ru.vodolazhsky.otus.model.StudyTest;
@@ -18,27 +20,28 @@ public class OrganizerStudyTest implements StudyTestService {
     private final Scanner scanner;
     private final StudyTestReader reader;
     private final int examBarrier;
+    private final MessageSource mSource;
 
-    public OrganizerStudyTest(StudyTestReader reader, @Value("${exam.barrier}") int examBarrier) {
+    public OrganizerStudyTest(StudyTestReader reader,
+                              @Value("${exam.barrier}") int examBarrier,
+                              MessageSource mSource) {
+
         this.scanner = new Scanner(System.in);
         this.reader = reader;
         this.examBarrier = examBarrier;
+        this.mSource = mSource;
     }
 
     @Override
     public void execute() throws IOException, CsvException {
-        System.out.print("Write your name: ");
+        System.out.print(getMessage(mSource, "study.test.organizer.name"));
         String name = scanner.nextLine().trim();
-        System.out.print("Write your surname: ");
+        System.out.print(getMessage(mSource, "study.test.organizer.surname"));
         String surname = scanner.nextLine().trim();
 
-        System.out.printf("""
-                Ok, %s %s... I have a few questions for you...
-                To pass the test you need to score %d points...
-                Let's do it!\n
-                """, name, surname, examBarrier);
+        System.out.printf(getMessage(mSource, "study.test.organizer.letsdoit"), name, surname, examBarrier);
 
-        StudyTest studyTest = reader.parseTest();
+        StudyTest studyTest = reader.parseTest(LocaleContextHolder.getLocale());
         int correctAnswerCount = 0;
 
         for (Question q : studyTest.questions()) {
@@ -47,9 +50,9 @@ public class OrganizerStudyTest implements StudyTestService {
         }
 
         if(correctAnswerCount >= examBarrier) {
-            System.out.printf("Congratulations, %s! You scored %d points and passed the test", name, correctAnswerCount);
+            System.out.printf(getMessage(mSource, "study.test.organizer.congrats"), name, correctAnswerCount);
         } else {
-            System.out.printf("Sorry, %s, You scored %d points and didn't pass the test.", name, correctAnswerCount);
+            System.out.printf(getMessage(mSource, "study.test.organizer.sorry"), name, correctAnswerCount);
         }
     }
 
@@ -66,29 +69,29 @@ public class OrganizerStudyTest implements StudyTestService {
      */
     private int processQuestion(Question q) {
         if (q.correctAnswers().size() == 1) {
-            System.out.printf("Answer options: %s\n", String.join(", ", q.possibleAnswer()));
+            System.out.printf(getMessage(mSource, "study.test.organizer.answer.option"), String.join(", ", q.possibleAnswer()));
             String expectedAnswer = q.correctAnswers().get(0).toLowerCase();
             String currentAnswer = scanner.nextLine().trim().toLowerCase();
 
             if (currentAnswer.equals(expectedAnswer)) {
-                System.out.println("Correct answer!\n");
+                System.out.println(getMessage(mSource, "study.test.organizer.correct.answer"));
                 return 1;
             } else {
-                System.out.printf("Wrong answer!\nCorrect answer: %s\n\n", expectedAnswer);
+                System.out.printf(getMessage(mSource, "study.test.organizer.wrong.answer"), expectedAnswer);
                 return 0;
             }
         } else {
-            System.out.println("After listing the answers, post 'end'");
+            System.out.println(getMessage(mSource, "study.test.organizer.listing.answer"));
             String currentAnswer;
             List<String> answers = new ArrayList<>();
             while (!(currentAnswer = scanner.nextLine().trim()).equals("end")) {
                 answers.add(currentAnswer.toLowerCase());
             }
             if (q.correctAnswers().size() == answers.size() && q.correctAnswers().containsAll(answers)) {
-                System.out.println("Correct answer!");
+                System.out.println(getMessage(mSource, "study.test.organizer.correct.answer"));
                 return 1;
             } else {
-                System.out.printf("Wrong answer!\nCorrect answer: %s\n\n", String.join(", ", q.correctAnswers()));
+                System.out.printf(getMessage(mSource, "study.test.organizer.wrong.answer"), String.join(", ", q.correctAnswers()));
                 return 0;
             }
         }

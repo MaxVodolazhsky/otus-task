@@ -1,0 +1,4 @@
+application.mode: organizer
+exam.barrier: 4
+
+spring.banner.location: classpath:banner.txt
