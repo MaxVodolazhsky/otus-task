@@ -10,12 +10,10 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework:spring-context:5.3.20")
+    implementation("org.springframework.boot:spring-boot-starter:2.7.17")
     implementation("com.opencsv:opencsv:5.7.1")
 
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testImplementation("org.mockito:mockito-junit-jupiter:5.7.0")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
+    testImplementation("org.springframework.boot:spring-boot-starter-test:2.7.17")
 }
 
 tasks.getByName<Test>("test") {

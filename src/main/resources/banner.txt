@@ -1,0 +1,8 @@
+${AnsiBackground.WHITE} ,---.   ,--.             ,--.         ,--------.              ,--.    ,---.
+${AnsiBackground.WHITE}'   .-',-'  '-.,--.,--. ,-|  |,--. ,--.'--.  .--',---.  ,---.,-'  '-. /  O  \  ,---.  ,---.
+${AnsiBackground.BLUE} `.  `-.'-.  .-'|  ||  |' .-. | \  '  /    |  |  | .-. :(  .-''-.  .-'|  .-.  || .-. || .-. |
+${AnsiBackground.BLUE} .-'    | |  |  '  ''  '\ `-' |  \   '     |  |  \   --..-'  `) |  |  |  | |  || '-' '| '-' '
+${AnsiBackground.RED}  `-----'  `--'   `----'  `---' .-'  /      `--'   `----'`----'  `--'  `--' `--'|  |-' |  |-'
+${AnsiBackground.RED}                                `---'                                           `--'   `--'
+Designed for Otus
+Powered by Spring Boot ${spring-boot.version}

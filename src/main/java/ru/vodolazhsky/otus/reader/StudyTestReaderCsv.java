@@ -12,22 +12,24 @@ import ru.vodolazhsky.otus.model.StudyTest;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class StudyTestReaderCsv implements StudyTestReader {
 
-    private final Resource questions;
+    private final Map<Locale, Resource> questions;
 
-    public StudyTestReaderCsv(Resource questions) {
+    public StudyTestReaderCsv(Map<Locale, Resource> questions) {
         this.questions = questions;
     }
 
-    public StudyTest parseTest() throws IOException, CsvException {
+    public StudyTest parseTest(Locale locale) throws IOException, CsvException {
         CSVParser csvParser = new CSVParserBuilder()
                 .withSeparator(':')
                 .build();
 
         try (CSVReader reader = new CSVReaderBuilder(
-                new InputStreamReader(questions.getInputStream()))
+                new InputStreamReader(questions.get(locale).getInputStream()))
                 .withCSVParser(csvParser)
                 .build()) {
 
